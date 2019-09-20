@@ -23,22 +23,16 @@ class profile_field_salesforceaccount extends profile_field_base {
         // First call parent constructor.
         parent::__construct($fieldid, $userid, $fielddata);
 
+        $this->options[0] = get_string('choose').'...';
         $accounts = $DB->get_records('salesforceaccount', ['isdeleted'=>'false']);
-        foreach ($accounts as $id=>$account) {
+        foreach ($accounts as $account) {
           $object = unserialize($account->serialized);
-          $accounts[$id] = get_string('display', 'profilefield_salesforceaccount', $object);
+          $accounts[$account->id] = get_string('display', 'profilefield_salesforceaccount', $object);
         }
-
-        $this->options = $accounts;
-        // $this->options = $DB->get_records_menu('salesforceaccount', null, '', $fields='*');
-        // $this->options[0] = get_string('choose').'...';
-        sort($this->options);
-
-        // foreach ($this->options as $key => $option) {
-        //     // Multilang formatting with filters.
-        //     $this->options[$option] = format_string($option, true, ['context' => context_system::instance()]);
-        // }
-        $this->options = array_merge([get_string('choose').'...'], $this->options);
+        asort($accounts);
+        foreach ($accounts as $k=>$v) {
+          $this->options[$k] = $v;
+        }
 
         // Set the data key.
         if ($this->data !== null) {
@@ -98,18 +92,6 @@ class profile_field_salesforceaccount extends profile_field_base {
     }
 
     /**
-     * When passing the user object to the form class for the edit profile page
-     * we should load the key for the saved data
-     *
-     * Overwrites the base class method.
-     *
-     * @param stdClass $user User object.
-     */
-    public function edit_load_user_data($user) {
-        $user->{$this->inputname} = $this->datakey;
-    }
-
-    /**
      * HardFreeze the field if locked.
      * @param moodleform $mform instance of the moodleform class
      */
@@ -122,6 +104,7 @@ class profile_field_salesforceaccount extends profile_field_base {
             $mform->setConstant($this->inputname, format_string($this->datakey));
         }
     }
+    
     /**
      * Convert external data (csv file) from value to key for processing later by edit_save_data_preprocess
      *
