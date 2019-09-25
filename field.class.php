@@ -23,7 +23,7 @@ class profile_field_salesforceaccount extends profile_field_base {
         // First call parent constructor.
         parent::__construct($fieldid, $userid, $fielddata);
 
-        $this->options[0] = get_string('choose').'...';
+        $this->options[] = get_string('choose').'...';
         $accounts = $DB->get_records('salesforceaccount', ['isdeleted'=>'false']);
         foreach ($accounts as $account) {
           $object = unserialize($account->serialized);
@@ -47,9 +47,12 @@ class profile_field_salesforceaccount extends profile_field_base {
     function display_data() {
         global $DB;
 
-        $account = $DB->get_record('salesforceaccount', ['id'=>$this->data]);
-        $object = unserialize($account->serialized);
-        return get_string('display', 'profilefield_salesforceaccount', $object);
+        if ($account = $DB->get_record('salesforceaccount', ['id'=>$this->data])) {
+          $object = unserialize($account->serialized);
+          return get_string('display', 'profilefield_salesforceaccount', $object);
+        } else {
+          return get_string('notassigned', 'profilefield_salesforceaccount');
+        }
     }
 
     /**
@@ -104,7 +107,7 @@ class profile_field_salesforceaccount extends profile_field_base {
             $mform->setConstant($this->inputname, format_string($this->datakey));
         }
     }
-    
+
     /**
      * Convert external data (csv file) from value to key for processing later by edit_save_data_preprocess
      *
@@ -134,6 +137,6 @@ class profile_field_salesforceaccount extends profile_field_base {
      * @since Moodle 3.2
      */
     public function get_field_properties() {
-        return array(PARAM_TEXT, NULL_NOT_ALLOWED);
+        return array(PARAM_TEXT);
     }
 }

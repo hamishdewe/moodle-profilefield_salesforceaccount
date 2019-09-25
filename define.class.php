@@ -10,53 +10,6 @@
 
 class profile_define_salesforceaccount extends profile_define_base {
 
-    // function validate($account) {
-    //     if (!is_object($account)) {
-    //         throw new Exception('organisation must be an object');
-    //     }
-    //     if (!isset($account->idnumber) || !is_string($org->idnumber)) {
-    //         throw new Exception('string idnumber is required');
-    //     }
-    //     if (!isset($account->name) || !is_string($org->name)) {
-    //         throw new Exception('string name is required');
-    //     }
-    //     if (isset($account->regex) && !is_string($org->regex)) {
-    //         throw new Exception('regex must be a string');
-    //     }
-    //     if (isset($account->internal_rep) && !is_string($org->internal_rep)) {
-    //         throw new Exception('internal_rep must be a string');
-    //     }
-    //     if (isset($account->external_rep) && !is_string($org->external_rep)) {
-    //         throw new Exception('external_rep must be a string');
-    //     }
-    // }
-    //
-    // function create($account) {
-    //     global $DB;
-    //
-    //     $this->validate($account);
-    //     return $DB->insert_record('salesforceaccount', $org);
-    // }
-    //
-    // function update($account) {
-    //     global $DB;
-    //
-    //     if (!isset($account->id) && !isset($org->idnumber)) {
-    //         throw new Exception('org must have either a unique id or idnumber');
-    //     }
-    //     if (!isset($account->id)) {
-    //         $orgbyidnumber = $DB->get_record('salesforceaccount', ['idnumber'=>$org->idnumber]);
-    //         $org->id = $orgbyidnumber->id;
-    //     }
-    //     return $DB->update_record('salesforceaccount', $org);
-    // }
-    //
-    // function delete($account) {
-    //     global $DB;
-    //
-    //
-    // }
-
     /**
      * Prints out the form snippet for the part of creating or
      * editing a profile field specific to the current data type
