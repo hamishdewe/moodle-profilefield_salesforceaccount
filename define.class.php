@@ -21,8 +21,8 @@ class profile_define_salesforceaccount extends profile_define_base {
         $form->addHelpButton('param1', 'param_apikey', 'profilefield_salesforceaccount');
         $form->setDefault('param1', '');
         $form->setType('param1', PARAM_RAW_TRIMMED);
-        $form->addElement('hidden', 'defaultdata', '0');
-        $form->setType('defaultdata', PARAM_INT);
+        $form->addElement('hidden', 'defaultdata', null);
+        $form->setType('defaultdata', PARAM_RAW);
     }
 
     /**
