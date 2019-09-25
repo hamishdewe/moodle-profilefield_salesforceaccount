@@ -5,12 +5,16 @@ require_once('../../../../../config.php');
 global $DB;
 
 $apikey = optional_param('apikey', null, PARAM_TEXT);
+
+$fieldid = $DB->get_field_sql('select id from {user_info_field} where param1 = :param1', ['param1'=>$apikey]);
+
 // Require matching key or fail
-if (is_null($apikey) || !$DB->record_exists_sql('select id from {user_info_field} where param1 = :param1', ['param1'=>$apikey])) {
+if (is_null($apikey) || !$fieldid) {
   http_response_code(404);
   die;
 }
 
+header('Content-Type: text/xml');
 /* Listen for changes to Salesforce accounts */
 $soap = simplexml_load_string(file_get_contents('php://input'));
 $sObject = $soap->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://soap.sforce.com/2005/09/outbound')->notifications->Notification->sObject->children('urn:sobject.enterprise.soap.sforce.com');
@@ -34,8 +38,15 @@ if ($existing = $DB->get_record('salesforceaccount', ['idnumber'=>$object->Id]))
   $record->id = $DB->insert_record('salesforceaccount', $record);
 }
 
+if ($object->IsDeleted) {
+  // remove assignments
+
+
+  $DB->delete_records_select('user_info_data', 'fieldid = :fieldid AND data = :data', array('fieldid'=>$fieldid, 'data'=>$record->id));
+}
+
 // Send the ACK back to Salesforce
-header('Content-Type: text/xml');
+
 echo '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
     <soap:Body>
         <notificationsResponse xmlns:ns2="urn:sobject.enterprise.soap.sforce.com" xmlns="http://soap.sforce.com/2005/09/outbound">

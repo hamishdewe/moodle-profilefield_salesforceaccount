@@ -35,7 +35,7 @@ class profile_field_salesforceaccount extends profile_field_base {
         }
 
         // Set the data key.
-        if ($this->data !== null) {
+        if ($this->data !== null && $this->data !== '0') {
             $key = $this->data;
             if (isset($this->options[$key]) || ($key = array_search($key, $this->options)) !== false) {
                 $this->data = $key;
